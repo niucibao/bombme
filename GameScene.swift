@@ -72,11 +72,21 @@ class GameScene: SKScene {
         cursonNode.removeFromParent()
         removeThrowing()
         
+        let impulse = cursonNode.getImpulse()
+        
+        
+        guard !((impulse.dx < 0.2 && impulse.dx > -0.2) && (impulse.dy < 0.2 && impulse.dy > -0.2)) else {
+            
+            print(impulse)
+            return
+        }
+        
         let bomb = BombNode(startPosition: calculateBombStartPosition(isPlayer: true), isPlayer: true)
         bombs.append(bomb)
+        bomb.playThwowingSound()
         self.addChild(bomb)
         
-        bomb.physicsBody?.applyImpulse(cursonNode.getImpulse())
+        bomb.physicsBody?.applyImpulse(impulse)
         
     }
     
@@ -108,6 +118,7 @@ class GameScene: SKScene {
                 if currentTime - lastTimeOpponentBomb > 3.0 - delta {
                     
                     let bomb = BombNode(startPosition: calculateBombStartPosition(isPlayer: false), isPlayer: false)
+                    bomb.playThwowingSound()
                     bombs.append(bomb)
                     self.addChild(bomb)
                     

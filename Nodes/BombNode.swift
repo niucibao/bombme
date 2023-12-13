@@ -32,6 +32,8 @@ class BombNode: SKShapeNode {
         scene.addChild(explosion)
         explosion.explode()
         
+        playExplodingSound()
+        
         self.physicsBody?.collisionBitMask = 0
         self.removeFromParent()
     }
@@ -46,5 +48,15 @@ class BombNode: SKShapeNode {
             self.freccetta = nil
         }
     }
-
+    
+    func playThwowingSound() {
+        let action = SKAction.playSoundFileNamed("fire.wav", waitForCompletion: true)
+        self.run(action)
+    }
+    
+    func playExplodingSound() {
+        let action = SKAction.playSoundFileNamed("fire.wav", waitForCompletion: false)
+        self.run(action)
+    }
+ 
 }

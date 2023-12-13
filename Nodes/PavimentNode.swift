@@ -33,10 +33,6 @@ class PavimentNode: SKSpriteNode {
     }
     
     func appearOnSceneWithRandomAnimation(duration: CGFloat, scene: SKScene) {
-        
-        print("size: \(self.size)")
-        print("frame: \(self.frame.size.height)")
-        
         switch Int.random(in: 0...1) {
         case 0:
             self.position.y = scene.size.height / 2 + self.size.height / 2
