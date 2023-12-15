@@ -95,13 +95,21 @@ class PavimentNode: SKSpriteNode {
     }
     
     func pertosa(at point: CGPoint) {
+        let explosionRadius = 40.0
         let convertedPoint = CGPoint(x: point.x + size.width/2, y: abs(point.y - (size.height / 2)))
         
         let render = UIGraphicsImageRenderer(size: self.size)
         let img = render.image { ctx in
             currentImage.draw(at: .zero)
             
-            ctx.cgContext.addEllipse(in: CGRect(x: convertedPoint.x - 25, y: convertedPoint.y - 25, width: 50, height: 50))
+            ctx.cgContext.addEllipse(
+                in: CGRect(
+                    x: convertedPoint.x - explosionRadius/2,
+                    y: convertedPoint.y - explosionRadius/2,
+                    width: explosionRadius,
+                    height: explosionRadius
+                )
+            )
             ctx.cgContext.setBlendMode(.clear)
             ctx.cgContext.drawPath(using: .fill)
         }
