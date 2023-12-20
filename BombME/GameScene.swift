@@ -27,6 +27,7 @@ class GameScene: SKScene {
     var borderNode: BorderNode!
     
     var bombs: [BombNode] = []
+    private var boomSound: SKAction?
     
     var lastTimeOpponentBomb: TimeInterval?
     
@@ -38,6 +39,12 @@ class GameScene: SKScene {
     
     var viewController: GameViewController!
    
+    override func sceneDidLoad() {
+        super.sceneDidLoad()
+        // Loading and storing the action into a property would improve FPS.
+        boomSound = SKAction.playSoundFileNamed("fire.wav", waitForCompletion: false)
+    }
+    
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         
@@ -83,7 +90,9 @@ class GameScene: SKScene {
         
         let bomb = BombNode(startPosition: calculateBombStartPosition(isPlayer: true), isPlayer: true)
         bombs.append(bomb)
-        bomb.playThwowingSound()
+        
+        playExplodingSound()
+        
         self.addChild(bomb)
         
         bomb.physicsBody?.applyImpulse(impulse)
@@ -118,7 +127,7 @@ class GameScene: SKScene {
                 if currentTime - lastTimeOpponentBomb > 3.0 - delta {
                     
                     let bomb = BombNode(startPosition: calculateBombStartPosition(isPlayer: false), isPlayer: false)
-                    bomb.playThwowingSound()
+                    playExplodingSound()
                     bombs.append(bomb)
                     self.addChild(bomb)
                     
@@ -282,7 +291,10 @@ class GameScene: SKScene {
         }
     }
     
-    
+    private func playExplodingSound() {
+        guard let boomSound else { return }
+        run(boomSound)
+    }
 }
 
 extension GameScene : SKPhysicsContactDelegate {
@@ -334,7 +346,7 @@ extension GameScene : SKPhysicsContactDelegate {
             if let floor = nodeA as? PavimentNode, let bomb = nodeB as? BombNode {
                 
                 let buildingPoint = convert(contact.contactPoint, to: floor)
-                bomb.explode(scene: self, fakeExplosion: false)
+                bomb.explode(scene: self, at: contact.contactPoint, fakeExplosion: false)
                 bombs.removeAll(where: {$0 == bomb})
                 floor.pertosa(at: buildingPoint)
             }
