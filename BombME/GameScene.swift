@@ -243,9 +243,17 @@ class GameScene: SKScene {
             self.disappearWithTimer(timer: 0.2, array: self.paviments) {
                 self.children.forEach({$0.removeFromParent()})
                 self.bombs = []
+                
+                self.borderNode.removeFromParent()
+                self.borderNode = BorderNode(color: .clear, size: self.size)
+                self.borderNode.drawBorder(rectWidth: self.rectWidth)
+                self.addChild(self.borderNode)
+                
                 self.startGame()
             }
         }
+        
+        
         
     }
     

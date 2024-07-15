@@ -27,7 +27,7 @@ class PlayerNode: SKShapeNode {
         self.fillColor = isPlayer ? UIColor.blue : UIColor.red
         self.strokeColor = .clear
         self.physicsBody?.isDynamic = true
-        self.physicsBody?.mass = 0.01
+        self.physicsBody?.mass = 0.00000000000000001
         self.physicsBody = SKPhysicsBody(polygonFrom: self.path!)
         self.physicsBody?.affectedByGravity = true
         self.physicsBody?.collisionBitMask = CategoryBitMask.floorCategory | (isPlayer ? CategoryBitMask.opponentBombCategory : CategoryBitMask.playerBombCategory)
