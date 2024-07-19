@@ -15,6 +15,7 @@
 		7711E3232AC3845A00D19F52 /* BombNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E3222AC3845A00D19F52 /* BombNode.swift */; };
 		7711E3252AC38DCF00D19F52 /* ExplosionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E3242AC38DCF00D19F52 /* ExplosionNode.swift */; };
 		774F291C2C4A696A000B2D0A /* ShieldNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774F291B2C4A696A000B2D0A /* ShieldNode.swift */; };
+		774F291E2C4AB31B000B2D0A /* PunteggioLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774F291D2C4AB31B000B2D0A /* PunteggioLabel.swift */; };
 		7757B4E02AFDBCED00532042 /* FreccettaNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757B4DF2AFDBCED00532042 /* FreccettaNode.swift */; };
 		77705A8E2AE07065003E0A1B /* BorderNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77705A8D2AE07065003E0A1B /* BorderNode.swift */; };
 		778809FD2AAB7E4500BF38A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778809FC2AAB7E4500BF38A5 /* AppDelegate.swift */; };
@@ -36,6 +37,7 @@
 		7711E3222AC3845A00D19F52 /* BombNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombNode.swift; sourceTree = "<group>"; };
 		7711E3242AC38DCF00D19F52 /* ExplosionNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplosionNode.swift; sourceTree = "<group>"; };
 		774F291B2C4A696A000B2D0A /* ShieldNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShieldNode.swift; sourceTree = "<group>"; };
+		774F291D2C4AB31B000B2D0A /* PunteggioLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PunteggioLabel.swift; sourceTree = "<group>"; };
 		7757B4DF2AFDBCED00532042 /* FreccettaNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreccettaNode.swift; sourceTree = "<group>"; };
 		77705A8D2AE07065003E0A1B /* BorderNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderNode.swift; sourceTree = "<group>"; };
 		778809F92AAB7E4500BF38A5 /* BombME.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BombME.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				7711E3202AC362AE00D19F52 /* ThrowingNode.swift */,
+				774F291D2C4AB31B000B2D0A /* PunteggioLabel.swift */,
 				77705A8D2AE07065003E0A1B /* BorderNode.swift */,
 				7711E31A2AC3406300D19F52 /* PavimentNode.swift */,
 				774F291B2C4A696A000B2D0A /* ShieldNode.swift */,
@@ -196,6 +199,7 @@
 				7711E31B2AC3406300D19F52 /* PavimentNode.swift in Sources */,
 				77880A052AAB7E4500BF38A5 /* GameViewController.swift in Sources */,
 				7711E3212AC362AE00D19F52 /* ThrowingNode.swift in Sources */,
+				774F291E2C4AB31B000B2D0A /* PunteggioLabel.swift in Sources */,
 				77705A8E2AE07065003E0A1B /* BorderNode.swift in Sources */,
 				774F291C2C4A696A000B2D0A /* ShieldNode.swift in Sources */,
 				7757B4E02AFDBCED00532042 /* FreccettaNode.swift in Sources */,

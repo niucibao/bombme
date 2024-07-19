@@ -26,7 +26,7 @@ class GameScene: SKScene {
     var throwingNode: ThrowingNode?
     var paviments: [PavimentNode] = []
     var borderNode: BorderNode!
-    var label: SKLabelNode!
+    var label: PunteggioLabel!
     
     var shieldNode: ShieldNode?
     
@@ -34,7 +34,7 @@ class GameScene: SKScene {
     
     var points: Int = 0 {
         didSet {
-            label.text = "\(points)"
+            label.points = points
         }
     }
     
@@ -133,7 +133,8 @@ class GameScene: SKScene {
                 isFirstShot = false
             } else {
                 multiplier = 1
-                points = max(0, points - 1)
+                label.addPoints(scene: self, points: -1, multiplier: 1)
+                
             }
         }
     }
@@ -242,16 +243,9 @@ class GameScene: SKScene {
         self.opponent = PlayerNode(point: CGPoint(x: playerX - (playerWidth/2), y: playerY), size: playerSize, isPlayer: false)
     }
     
-    func createLabel() -> SKLabelNode{
-        let node = SKLabelNode()
-        
-        node.fontColor = .white
-        node.fontName = "menlo-Bold"
-        node.fontSize = 75
-        node.position = CGPoint(x: 0, y: self.frame.size.height / 2 - 170)
-        node.zPosition = -99
-        node.text = "0"
-        
+    func createLabel() -> PunteggioLabel {
+        let node = PunteggioLabel(sceneSize: self.frame.size)
+    
         addChild(node)
         return node
     }
@@ -417,7 +411,8 @@ extension GameScene : SKPhysicsContactDelegate {
                 bomb.explode(scene: self, fakeExplosion: true)
                 bombs.removeAll(where: {$0 == bomb})
                 if bomb.physicsBody?.categoryBitMask == CategoryBitMask.playerBombCategory {
-                    points += 5 * multiplier * numberOfSections/2
+                    let adding = 5 * multiplier * numberOfSections/2
+                    self.label.addPoints(scene: self, points: adding, multiplier: multiplier)
                     restartGame(numberOfSections: self.numberOfSections + 2)
                     
                     if isFirstShot {
@@ -445,9 +440,6 @@ extension GameScene : SKPhysicsContactDelegate {
         default:
             print("ESTIQUARTZI")
         }
-    
-        
-        
     }
     
 }
