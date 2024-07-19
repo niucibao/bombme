@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		034C1C8C2B2B6635007FFEE3 /* fire.caf in Resources */ = {isa = PBXBuildFile; fileRef = 034C1C8B2B2B6635007FFEE3 /* fire.caf */; };
-		037CE5092B2CD46E0016A731 /* fire.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 037CE5082B2CD46E0016A731 /* fire.mp3 */; };
 		037CE50B2B2CD4D40016A731 /* fire.wav in Resources */ = {isa = PBXBuildFile; fileRef = 037CE50A2B2CD4D40016A731 /* fire.wav */; };
 		7711E31B2AC3406300D19F52 /* PavimentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E31A2AC3406300D19F52 /* PavimentNode.swift */; };
 		7711E31D2AC34AE100D19F52 /* CursorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E31C2AC34AE100D19F52 /* CursorNode.swift */; };
@@ -16,6 +14,7 @@
 		7711E3212AC362AE00D19F52 /* ThrowingNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E3202AC362AE00D19F52 /* ThrowingNode.swift */; };
 		7711E3232AC3845A00D19F52 /* BombNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E3222AC3845A00D19F52 /* BombNode.swift */; };
 		7711E3252AC38DCF00D19F52 /* ExplosionNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7711E3242AC38DCF00D19F52 /* ExplosionNode.swift */; };
+		774F291C2C4A696A000B2D0A /* ShieldNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774F291B2C4A696A000B2D0A /* ShieldNode.swift */; };
 		7757B4E02AFDBCED00532042 /* FreccettaNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7757B4DF2AFDBCED00532042 /* FreccettaNode.swift */; };
 		77705A8E2AE07065003E0A1B /* BorderNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77705A8D2AE07065003E0A1B /* BorderNode.swift */; };
 		778809FD2AAB7E4500BF38A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778809FC2AAB7E4500BF38A5 /* AppDelegate.swift */; };
@@ -29,8 +28,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		034C1C8B2B2B6635007FFEE3 /* fire.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = fire.caf; sourceTree = "<group>"; };
-		037CE5082B2CD46E0016A731 /* fire.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fire.mp3; sourceTree = "<group>"; };
 		037CE50A2B2CD4D40016A731 /* fire.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fire.wav; sourceTree = "<group>"; };
 		7711E31A2AC3406300D19F52 /* PavimentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PavimentNode.swift; sourceTree = "<group>"; };
 		7711E31C2AC34AE100D19F52 /* CursorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CursorNode.swift; sourceTree = "<group>"; };
@@ -38,6 +35,7 @@
 		7711E3202AC362AE00D19F52 /* ThrowingNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThrowingNode.swift; sourceTree = "<group>"; };
 		7711E3222AC3845A00D19F52 /* BombNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombNode.swift; sourceTree = "<group>"; };
 		7711E3242AC38DCF00D19F52 /* ExplosionNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplosionNode.swift; sourceTree = "<group>"; };
+		774F291B2C4A696A000B2D0A /* ShieldNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShieldNode.swift; sourceTree = "<group>"; };
 		7757B4DF2AFDBCED00532042 /* FreccettaNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreccettaNode.swift; sourceTree = "<group>"; };
 		77705A8D2AE07065003E0A1B /* BorderNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderNode.swift; sourceTree = "<group>"; };
 		778809F92AAB7E4500BF38A5 /* BombME.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BombME.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +66,7 @@
 				7711E3202AC362AE00D19F52 /* ThrowingNode.swift */,
 				77705A8D2AE07065003E0A1B /* BorderNode.swift */,
 				7711E31A2AC3406300D19F52 /* PavimentNode.swift */,
+				774F291B2C4A696A000B2D0A /* ShieldNode.swift */,
 				7711E31C2AC34AE100D19F52 /* CursorNode.swift */,
 				7711E3242AC38DCF00D19F52 /* ExplosionNode.swift */,
 				7711E31E2AC3585B00D19F52 /* PlayerNode.swift */,
@@ -81,8 +80,6 @@
 			isa = PBXGroup;
 			children = (
 				037CE50A2B2CD4D40016A731 /* fire.wav */,
-				037CE5082B2CD46E0016A731 /* fire.mp3 */,
-				034C1C8B2B2B6635007FFEE3 /* fire.caf */,
 			);
 			path = Sounds;
 			sourceTree = "<group>";
@@ -178,11 +175,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				034C1C8C2B2B6635007FFEE3 /* fire.caf in Resources */,
 				77880A082AAB7E4500BF38A5 /* Main.storyboard in Resources */,
 				037CE50B2B2CD4D40016A731 /* fire.wav in Resources */,
 				778809FF2AAB7E4500BF38A5 /* GameScene.sks in Resources */,
-				037CE5092B2CD46E0016A731 /* fire.mp3 in Resources */,
 				77880A0A2AAB7E4500BF38A5 /* Assets.xcassets in Resources */,
 				77880A0D2AAB7E4500BF38A5 /* LaunchScreen.storyboard in Resources */,
 				77880A012AAB7E4500BF38A5 /* Actions.sks in Resources */,
@@ -202,6 +197,7 @@
 				77880A052AAB7E4500BF38A5 /* GameViewController.swift in Sources */,
 				7711E3212AC362AE00D19F52 /* ThrowingNode.swift in Sources */,
 				77705A8E2AE07065003E0A1B /* BorderNode.swift in Sources */,
+				774F291C2C4A696A000B2D0A /* ShieldNode.swift in Sources */,
 				7757B4E02AFDBCED00532042 /* FreccettaNode.swift in Sources */,
 				7711E3252AC38DCF00D19F52 /* ExplosionNode.swift in Sources */,
 				778809FD2AAB7E4500BF38A5 /* AppDelegate.swift in Sources */,
@@ -355,7 +351,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H6LF5RR8B5;
+				DEVELOPMENT_TEAM = 42MH99U6QU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = BOMB.ME;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -384,7 +380,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H6LF5RR8B5;
+				DEVELOPMENT_TEAM = 42MH99U6QU;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = BOMB.ME;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

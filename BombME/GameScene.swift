@@ -9,12 +9,13 @@ import SpriteKit
 import GameplayKit
 
 class CategoryBitMask {
-    static let borderCategory:       UInt32 = 0x1 << 0    // 0x0000001 1
-    static let playerCategory:       UInt32 = 0x1 << 1    // 0x0000010 2
-    static let opponentCategory:     UInt32 = 0x1 << 2    // 0x0000100 4
-    static let floorCategory:        UInt32 = 0x1 << 3    // 0x0001000 8
-    static let playerBombCategory:   UInt32 = 0x1 << 4    // 0x0010000 16
-    static let opponentBombCategory: UInt32 = 0x1 << 5    // 0x0100000 32
+    static let borderCategory:       UInt32 = 0x1 << 0    // 0x00000001 1
+    static let playerCategory:       UInt32 = 0x1 << 1    // 0x00000010 2
+    static let opponentCategory:     UInt32 = 0x1 << 2    // 0x00000100 4
+    static let floorCategory:        UInt32 = 0x1 << 3    // 0x00001000 8
+    static let playerBombCategory:   UInt32 = 0x1 << 4    // 0x00010000 16
+    static let opponentBombCategory: UInt32 = 0x1 << 5    // 0x00100000 32
+    static let shieldCategory:       UInt32 = 0x1 << 6    // 0x01000000 64
 }
 
 class GameScene: SKScene {
@@ -25,24 +26,39 @@ class GameScene: SKScene {
     var throwingNode: ThrowingNode?
     var paviments: [PavimentNode] = []
     var borderNode: BorderNode!
+    var label: SKLabelNode!
+    
+    var shieldNode: ShieldNode?
+    
+    var shieldButtonNode: SKSpriteNode!
+    
+    var points: Int = 0 {
+        didSet {
+            label.text = "\(points)"
+        }
+    }
+    
+    var multiplier = 1
     
     var bombs: [BombNode] = []
     private var boomSound: SKAction?
     
     var lastTimeOpponentBomb: TimeInterval?
-    
-    let cropNode: SKCropNode! = SKCropNode()
-    
+
     var numberOfSections = 2
     var sceneSize: CGSize { return CGSize(width: self.size.width - 200, height: self.size.height) }
     var rectWidth: CGFloat { return (sceneSize.width) / CGFloat(numberOfSections) }
     
     var viewController: GameViewController!
+    
+    var isFirstShot = true
    
     override func sceneDidLoad() {
         super.sceneDidLoad()
         // Loading and storing the action into a property would improve FPS.
         boomSound = SKAction.playSoundFileNamed("fire.wav", waitForCompletion: false)
+        shieldButtonNode = SKSpriteNode(imageNamed: "SHIELD-ICON")
+        shieldButtonNode.name = "shieldButton"
     }
     
     override func didMove(to view: SKView) {
@@ -52,51 +68,74 @@ class GameScene: SKScene {
         borderNode.drawBorder(rectWidth: rectWidth)
         self.addChild(borderNode)
         
+        shieldButtonNode.position = CGPoint(x: -self.size.width/2 + 100, y: -self.size.height/2 + 150)
+        shieldButtonNode.zPosition = 99
+        shieldButtonNode.size = CGSize(width: 100, height: 100)
+        self.addChild(shieldButtonNode)
+        
         startGame()
+        self.label = createLabel()
         
     }
     
     func touchDown(atPoint pos : CGPoint) {
-        
-        self.cursonNode = CursorNode(atPoint: pos, scene: self)
+        if let shieldNode, let player, shieldButtonNode.contains(pos) {
+            if let pb = player.physicsBody, pb.velocity.dy >= -8 && pb.velocity.dy <= 8 {
+                shieldNode.appearOnScene(scene: self, playerNode: player)
+            }
+        } else {
+            self.cursonNode = CursorNode(atPoint: pos, scene: self)
+        }
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        guard let cursonNode = cursonNode else { return }
-        removeThrowing()
-        cursonNode.moveTo(point: pos)
-        
-        let cursorVector = cursonNode.getVector()
-        self.throwingNode = ThrowingNode(startPosition: calculateBombStartPosition(isPlayer: true), lastPositionVector: cursorVector, scene: self)
-        
-        guard let throwingNode = throwingNode else { return }
-        self.addChild(throwingNode)
+        if !shieldButtonNode.contains(pos) {
+            guard let cursonNode = cursonNode else { return }
+            removeThrowing()
+            cursonNode.moveTo(point: pos)
+            
+            let cursorVector = cursonNode.getVector()
+            self.throwingNode = ThrowingNode(startPosition: calculateBombStartPosition(isPlayer: true), lastPositionVector: cursorVector, scene: self)
+            
+            guard let throwingNode = throwingNode else { return }
+            self.addChild(throwingNode)
+        }
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        guard let cursonNode = cursonNode else { return }
-        
-        cursonNode.removeFromParent()
-        removeThrowing()
-        
-        let impulse = cursonNode.getImpulse()
-        
-        
-        guard !((impulse.dx < 0.2 && impulse.dx > -0.2) && (impulse.dy < 0.2 && impulse.dy > -0.2)) else {
+        if let shieldNode, shieldButtonNode.contains(pos) {
+            shieldNode.removeFromParent()
+        } else {
+            guard let cursonNode = cursonNode else { return }
             
-            print(impulse)
-            return
+            cursonNode.removeFromParent()
+            removeThrowing()
+            
+            let impulse = cursonNode.getImpulse()
+            
+            
+            guard !((impulse.dx < 0.2 && impulse.dx > -0.2) && (impulse.dy < 0.2 && impulse.dy > -0.2)) else {
+                
+                print(impulse)
+                return
+            }
+            
+            let bomb = BombNode(startPosition: calculateBombStartPosition(isPlayer: true), isPlayer: true)
+            bombs.append(bomb)
+            
+            playExplodingSound()
+            
+            self.addChild(bomb)
+            
+            bomb.physicsBody?.applyImpulse(impulse)
+            
+            if isFirstShot {
+                isFirstShot = false
+            } else {
+                multiplier = 1
+                points = max(0, points - 1)
+            }
         }
-        
-        let bomb = BombNode(startPosition: calculateBombStartPosition(isPlayer: true), isPlayer: true)
-        bombs.append(bomb)
-        
-        playExplodingSound()
-        
-        self.addChild(bomb)
-        
-        bomb.physicsBody?.applyImpulse(impulse)
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -180,6 +219,16 @@ class GameScene: SKScene {
         return paviments
     }
     
+    fileprivate func createShield() {
+        let playerWidth = min(50, rectWidth / 4)
+        let playerHeight = min(150, playerWidth * 3)
+        
+        let shieldWidth = playerHeight * 1.5
+        
+        self.shieldNode = ShieldNode(color: .clear, size: CGSize(width: shieldWidth, height: shieldWidth))
+        shieldNode?.setup()
+    }
+    
     fileprivate func createPlayers() {
         let playerWidth = min(50, rectWidth / 4)
         let playerHeight = min(150, playerWidth * 3)
@@ -191,6 +240,20 @@ class GameScene: SKScene {
         let playerY = sceneSize.height / 2 - playerHeight*2 - 2
         self.player = PlayerNode(point: CGPoint(x: -playerX - (playerWidth/2) , y: playerY), size: playerSize, isPlayer: true)
         self.opponent = PlayerNode(point: CGPoint(x: playerX - (playerWidth/2), y: playerY), size: playerSize, isPlayer: false)
+    }
+    
+    func createLabel() -> SKLabelNode{
+        let node = SKLabelNode()
+        
+        node.fontColor = .white
+        node.fontName = "menlo-Bold"
+        node.fontSize = 75
+        node.position = CGPoint(x: 0, y: self.frame.size.height / 2 - 170)
+        node.zPosition = -99
+        node.text = "0"
+        
+        addChild(node)
+        return node
     }
     
     fileprivate func removeThrowing() {
@@ -226,6 +289,7 @@ class GameScene: SKScene {
         var color: UIColor
         if numberOfSections == 2 {
             color = .red
+            points = 0
         } else {
             color = .blue
         }
@@ -250,7 +314,11 @@ class GameScene: SKScene {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.disappearWithTimer(timer: 0.2, array: self.paviments) {
-                self.children.forEach({$0.removeFromParent()})
+                self.children.forEach({
+                    if !($0 is SKLabelNode) && $0.name != "shieldButton" {
+                        $0.removeFromParent()
+                    }
+                })
                 self.bombs = []
                 
                 self.borderNode.removeFromParent()
@@ -258,11 +326,13 @@ class GameScene: SKScene {
                 self.borderNode.drawBorder(rectWidth: self.rectWidth)
                 self.addChild(self.borderNode)
                 
+                self.shieldButtonNode.alpha = 1
+                
                 self.startGame()
             }
         }
         
-        
+        self.isFirstShot = true
         
     }
     
@@ -291,6 +361,7 @@ class GameScene: SKScene {
         
         appearWithTimer(timer: 0.1, array: paviments) {
             self.createPlayers()
+            self.createShield()
             
             guard let player = self.player, let opponent = self.opponent else { return }
             
@@ -324,7 +395,6 @@ extension GameScene : SKPhysicsContactDelegate {
         }
         
         guard let nodeA = nodeA, let nodeB = nodeB else { return }
-        
         switch nodeA.physicsBody?.categoryBitMask {
         case CategoryBitMask.borderCategory:
             if let _ = nodeA as? BorderNode, let player = nodeB as? PlayerNode {
@@ -347,7 +417,12 @@ extension GameScene : SKPhysicsContactDelegate {
                 bomb.explode(scene: self, fakeExplosion: true)
                 bombs.removeAll(where: {$0 == bomb})
                 if bomb.physicsBody?.categoryBitMask == CategoryBitMask.playerBombCategory {
+                    points += 5 * multiplier * numberOfSections/2
                     restartGame(numberOfSections: self.numberOfSections + 2)
+                    
+                    if isFirstShot {
+                        multiplier += 1
+                    }
                 }
             }
         case CategoryBitMask.floorCategory:
@@ -357,6 +432,15 @@ extension GameScene : SKPhysicsContactDelegate {
                 bomb.explode(scene: self, at: contact.contactPoint, fakeExplosion: false)
                 bombs.removeAll(where: {$0 == bomb})
                 floor.pertosa(at: buildingPoint)
+            }
+        case CategoryBitMask.opponentBombCategory:
+            if let bomb = nodeA as? BombNode, let shield = nodeB as? ShieldNode {
+                let shieldPoint = convert(contact.contactPoint, to: shield)
+                bomb.explode(scene: self, at: contact.contactPoint, fakeExplosion: false)
+                shield.pertosa()
+                if shield.alpha <= 0 {
+                    shieldButtonNode.alpha = 0
+                }
             }
         default:
             print("ESTIQUARTZI")

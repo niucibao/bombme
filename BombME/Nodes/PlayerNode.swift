@@ -10,6 +10,8 @@ import SpriteKit
 
 class PlayerNode: SKShapeNode {
     
+    var positionInScene: CGPoint = .zero
+    
     var isPlayer: Bool = true
     
     override init() {
@@ -21,8 +23,8 @@ class PlayerNode: SKShapeNode {
     }
     
     convenience init(point: CGPoint, size: CGSize, isPlayer: Bool) {
-        
         self.init(rect: CGRect(origin: point, size: size), cornerRadius: 0)
+        self.positionInScene = point
         self.isPlayer = isPlayer
         self.fillColor = isPlayer ? UIColor.blue : UIColor.red
         self.strokeColor = .clear

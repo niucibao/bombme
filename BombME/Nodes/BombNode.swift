@@ -22,9 +22,10 @@ class BombNode: SKShapeNode {
 //        self.physicsBody?.mass = 1
         self.physicsBody?.affectedByGravity = true
         self.strokeColor = .clear
+        
         self.physicsBody?.categoryBitMask = isPlayer ? CategoryBitMask.playerBombCategory : CategoryBitMask.opponentBombCategory
-        self.physicsBody?.collisionBitMask = CategoryBitMask.floorCategory
-        self.physicsBody?.contactTestBitMask = (isPlayer ? CategoryBitMask.opponentCategory : CategoryBitMask.playerCategory) | CategoryBitMask.floorCategory
+        self.physicsBody?.collisionBitMask = CategoryBitMask.floorCategory | CategoryBitMask.shieldCategory
+        self.physicsBody?.contactTestBitMask = (isPlayer ? CategoryBitMask.opponentCategory : CategoryBitMask.playerCategory | CategoryBitMask.shieldCategory) | CategoryBitMask.floorCategory
     }
     
     func explode(scene: SKScene, at point: CGPoint? = nil, fakeExplosion: Bool) {
