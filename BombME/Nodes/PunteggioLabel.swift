@@ -18,7 +18,6 @@ class PunteggioLabel: SKLabelNode {
     
     init(sceneSize: CGSize) {
         super.init()
-
         fontColor = .white
         fontName = "menlo-Bold"
         fontSize = 75

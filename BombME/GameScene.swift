@@ -27,16 +27,11 @@ class GameScene: SKScene {
     var paviments: [PavimentNode] = []
     var borderNode: BorderNode!
     var label: PunteggioLabel!
+    var gameOverNode: GameOverNode?
     
     var shieldNode: ShieldNode?
     
     var shieldButtonNode: SKSpriteNode!
-    
-    var points: Int = 0 {
-        didSet {
-            label.points = points
-        }
-    }
     
     var multiplier = 1
     
@@ -44,7 +39,7 @@ class GameScene: SKScene {
     private var boomSound: SKAction?
     
     var lastTimeOpponentBomb: TimeInterval?
-
+    
     var numberOfSections = 2
     var sceneSize: CGSize { return CGSize(width: self.size.width - 200, height: self.size.height) }
     var rectWidth: CGFloat { return (sceneSize.width) / CGFloat(numberOfSections) }
@@ -52,7 +47,7 @@ class GameScene: SKScene {
     var viewController: GameViewController!
     
     var isFirstShot = true
-   
+    
     override func sceneDidLoad() {
         super.sceneDidLoad()
         // Loading and storing the action into a property would improve FPS.
@@ -69,7 +64,7 @@ class GameScene: SKScene {
         self.addChild(borderNode)
         
         shieldButtonNode.position = CGPoint(x: -self.size.width/2 + 100, y: -self.size.height/2 + 150)
-        shieldButtonNode.zPosition = 99
+        shieldButtonNode.zPosition = 95
         shieldButtonNode.size = CGSize(width: 100, height: 100)
         self.addChild(shieldButtonNode)
         
@@ -83,6 +78,8 @@ class GameScene: SKScene {
             if let pb = player.physicsBody, pb.velocity.dy >= -8 && pb.velocity.dy <= 8 {
                 shieldNode.appearOnScene(scene: self, playerNode: player)
             }
+        } else if let gameOverNode, gameOverNode.contains(pos) {
+        
         } else {
             self.cursonNode = CursorNode(atPoint: pos, scene: self)
         }
@@ -103,11 +100,7 @@ class GameScene: SKScene {
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let shieldNode, shieldButtonNode.contains(pos) {
-            shieldNode.removeFromParent()
-        } else {
-            guard let cursonNode = cursonNode else { return }
-            
+        if let cursonNode = cursonNode {
             cursonNode.removeFromParent()
             removeThrowing()
             
@@ -136,12 +129,15 @@ class GameScene: SKScene {
                 label.addPoints(scene: self, points: -1, multiplier: 1)
                 
             }
+        } else if let shieldNode, shieldButtonNode.contains(pos) {
+            shieldNode.removeFromParent()
         }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let _ = player, let _ = opponent else { return }
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        if let _ = player, let _ = opponent {
+            for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -172,7 +168,7 @@ class GameScene: SKScene {
                     self.addChild(bomb)
                     
                     let impulse = CGVector(dx: CGFloat.random(in: -4.0 ... -1), dy: CGFloat.random(in: 1.0 ... 4.0))
-                
+                    
                     bomb.physicsBody?.applyImpulse(impulse)
                     
                     self.lastTimeOpponentBomb = nil
@@ -205,14 +201,14 @@ class GameScene: SKScene {
         for i in 0..<numberOfSections {
             
             let xPosition = -sceneSize.width/2 + rectWidth/2  + rectWidth * CGFloat(i)
-//            let xPosition = (i+1) * ((sceneSize.width - 100.0) / CGFloat(numberOfSections + 2) )
+            //            let xPosition = (i+1) * ((sceneSize.width - 100.0) / CGFloat(numberOfSections + 2) )
             let height = CGFloat.random(in: sceneSize.height * 0.3 ... sceneSize.height * 0.6 )
             
             let rectangle = PavimentNode(color: .red, size: CGSize(width: rectWidth, height: height))
             rectangle.position = CGPoint(x: xPosition, y: (sceneSize.height - height) / -2 )
             rectangle.setup()
             
-//            self.addChild(rectangle)
+            //            self.addChild(rectangle)
             
             paviments.append(rectangle)
         }
@@ -245,7 +241,7 @@ class GameScene: SKScene {
     
     func createLabel() -> PunteggioLabel {
         let node = PunteggioLabel(sceneSize: self.frame.size)
-    
+        
         addChild(node)
         return node
     }
@@ -280,14 +276,15 @@ class GameScene: SKScene {
     }
     
     func restartGame(numberOfSections: Int) {
-        var color: UIColor
-        if numberOfSections == 2 {
-            color = .red
-            points = 0
-        } else {
-            color = .blue
-        }
+//        if numberOfSections == 2 {
+//            self.gameOverNode = GameOverNode(color: .red, size: self.frame.size)
+//            self.gameOverNode?.setup(finalScore: label.points)
+//            self.shieldNode?.removeFromParent()
+//            self.label.removeFromParent()
+//            self.addChild(self.gameOverNode!)
+//        }
         
+        let color = numberOfSections == 2 ? UIColor.red : UIColor.blue
         let node = SKSpriteNode(color: color, size: self.size)
         node.position = .zero
         node.zPosition = 19
@@ -309,7 +306,7 @@ class GameScene: SKScene {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.disappearWithTimer(timer: 0.2, array: self.paviments) {
                 self.children.forEach({
-                    if !($0 is SKLabelNode) && $0.name != "shieldButton" {
+                    if !($0 is GameOverNode), !($0 is SKLabelNode) , $0.name != "shieldButton" {
                         $0.removeFromParent()
                     }
                 })
@@ -321,13 +318,11 @@ class GameScene: SKScene {
                 self.addChild(self.borderNode)
                 
                 self.shieldButtonNode.alpha = 1
-                
                 self.startGame()
             }
         }
         
         self.isFirstShot = true
-        
     }
     
     fileprivate func disappearWithTimer(timer: CGFloat, array: [PavimentNode], completion: (() -> ())?) {
@@ -351,6 +346,12 @@ class GameScene: SKScene {
     }
     
     func startGame() {
+        if numberOfSections == 2 {
+            if let label {
+                label.points = 0
+            }
+        }
+        
         self.paviments = createPaviments()
         
         appearWithTimer(timer: 0.1, array: paviments) {
